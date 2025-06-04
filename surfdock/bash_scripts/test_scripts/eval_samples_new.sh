@@ -26,7 +26,7 @@ model_temp="$(dirname "$(dirname "$(dirname "$path")")")"
 #------------------------------------------------------------------------------------------------#
 echo '------------------------------------ Step0 : Setup Params --------------------------------------'
 export precomputed_arrays="${temp}/precomputed/precomputed_arrays"
-gpu_string="0"
+gpu_string="0,1,2"
 echo "Using GPU devices: ${gpu_string}"
 IFS=',' read -ra gpu_array <<< "$gpu_string"
 NUM_GPUS=${#gpu_array[@]}
@@ -34,10 +34,10 @@ export CUDA_VISIBLE_DEVICES=${gpu_string}
 
 main_process_port=2951${gpu_array[-1]}
 project_name='SurfDock_eval_samples/timesplit'
-surface_out_dir=${SurfDockdir}/data/timesplit/${project_name}/samples_8A_surface
-data_dir=${SurfDockdir}/data/timesplit/samples
-out_csv_file=${SurfDockdir}/data/timesplit/${project_name}/input_csv_files/samples.csv
-esmbedding_dir=${SurfDockdir}/data/timesplit/${project_name}/samples_esmbedding
+surface_out_dir=${SurfDockdir}/data/eval_sample_dirs/${project_name}/test_samples_8A_surface
+data_dir=/data6/jialin/KarmaDock/timesplit363
+out_csv_file=${SurfDockdir}/data/eval_sample_dirs/${project_name}/input_csv_files/test_samples.csv
+esmbedding_dir=${SurfDockdir}/data/eval_sample_dirs/${project_name}/test_samples_esmbedding
 # project_name='SurfDock_Screen_samples/repeat5'
 
 #------------------------------------------------------------------------------------------------#
@@ -48,7 +48,7 @@ source ~/anaconda3/bin/activate surf_maker
 mkdir -p $surface_out_dir
 cd $surface_out_dir
 command=`
-python ${SurfDockdir}/comp_surface/prepare_target/computeTargetMesh_test_samples.py \
+python /data6/jialin/SurfGen/data/surface_maker/surface_maker.py \
 --data_dir ${data_dir} \
 --out_dir ${surface_out_dir} \
 `
@@ -60,13 +60,12 @@ state=$command
 echo '--------------------------------  Step2 : Get Input CSV File -----------------------------------'
 source ~/anaconda3/bin/activate SurfDock
 command=` python \
-${SurfDockdir}/inference_utils/construct_csv_input.py \
+${SurfDockdir}/inference_utils/construct_csv_input1.py \
 --data_dir ${data_dir} \
 --surface_out_dir ${surface_out_dir} \
 --output_csv_file ${out_csv_file} \
 `
 state=$command
-echo "$command"
 
 #------------------------------------------------------------------------------------------------#
 #--------------------------------  Step3 : Get Pocket ESM Embedding  ----------------------------#
