@@ -48,7 +48,7 @@ source ~/anaconda3/bin/activate surf_maker
 mkdir -p $surface_out_dir
 cd $surface_out_dir
 command=`
-python /data6/jialin/SurfGen/data/surface_maker/surface_maker.py \
+python ${SurfDockdir}/../surfgen/data/surface_maker/surface_maker.py \
 --data_dir ${data_dir} \
 --out_dir ${surface_out_dir} \
 `
