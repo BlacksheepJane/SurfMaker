@@ -38,7 +38,8 @@ else:
     p_ = p(x, sigma[:, None], N=100)
     np.save(os.path.join(tmp_path,'.p.npy'), p_)
 
-    score_ = grad(x, sigma[:, None], N=100) / p_
+    epsilon = 1e-8 # Small value to prevent division by zero
+    score_ = grad(x, sigma[:, None], N=100) / (p_ + epsilon)
     np.save(os.path.join(tmp_path,'.score.npy'), score_)
 
 
